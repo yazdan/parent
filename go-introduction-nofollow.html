@@ -1,0 +1,130 @@
+<p>نیاز همیشه نیرویی بوده که باعث شده تغییرات بوجود بیایند و داستان بوجود آمدن زبان <a href="http://golang.org/">golang</a> از احساس نیاز سه تن از کارمندان گوگل به نام‌های <a href="http://en.wikipedia.org/wiki/Ken_Thompson">کن تامپسون</a>،<a href="http://en.wikipedia.org/wiki/Rob_Pike">رابرت پایک</a> و <a href="http://en.wikipedia.org/wiki/Robert_Griesemer">رابرت گریسمر</a> ایجاد شد. آنها تخصصشان در زمینه کامپایلر و سیستم عامل بود و هر سه از منتقدان استفاده از C++ و Java بودند. این زبان‌ها، زبان‌های اصلی مورد استفاده در گوگل بود. آنها ایده‌ی طراحی یک زبان جدید را در سال ۲۰۰۷ در سر داشتند و اولین نسخه این زبان جدید را در سال ۲۰۱۲ منتشر کردند. آنها همچنین می‌خواستند این زبان توان پاسخ به نیازهای جدیدی که با ظهور پرازنده‌های چند هسته‌ای، کامپیوترهای متصل به هم و کلاسترهای بزرگ محاسباتی بوجود آمده بود را نیز داشته باشند.</p>
+
+<h2>مشکلات</h2>
+
+<p>مشکلاتی که باعث آنها به فکر طراحی زبان <a href="http://golang.org/" rel="nofollow">golang</a> به شرح زیر است:</p>
+
+<ul>
+<li><p>سرعت <a href="http://en.wikipedia.org/wiki/Software_build" rel="nofollow">build</a> کم: سیستم های مورد استفاده در گوگل شامل چندین میلیون خط کد است. زمان مورد نیاز برای کامپایل و لینک شدن این کدها حتی با استفاده سیستم‌های مدرن <a href="http://en.wikipedia.org/wiki/Software_build" rel="nofollow">build</a> ساعت‌ها و حتی روز‌ها به طول می‌انجامید.</p></li>
+<li><p>تیم‌های بزرگ: کار در تیم‌های بزرگ(تیمی که شما حداکثر نصف افراد آنرا می‌شناسید) معضلات خاص خود را دارد. سلایق مختلف افراد، سبک‌های متفاوت کد نویسی، عدم یکسانی سطح سواد باعث می‌شود که هریک از اعضا تیم از یک زیر مجموعه از ویژگی‌ها و قدرتهای زبان استفاده کنند. به طبع تیم‌های بزرگ مشکلات زیر را به همراه دارد:</p>
+
+<ul>
+<li>استفاده هر برنامه نویس از یک زیر مجموعه زبان</li>
+<li>درک برنامه پایین(خوانایی پایین، مستندات کم و &hellip;)</li>
+</ul>
+</li>
+<li>وابستگی‌ها غیر قابل کنترل: وابستگی‌ها بالاخص در کدهای کامپایل شدنی یکی از مواردی است که باعث کاهش سرعت <a href="http://en.wikipedia.org/wiki/Software_build" rel="nofollow">build</a> و همچنین افزایش حجم کدهای تولید شده می‌شود. همچنین مدیریت آنها در برنامه‌های بزرگ بسیار سخت و غیر قابل کنترل است. بوجود آورندگان <a href="http://golang.org/" rel="nofollow">golang</a> در گوگل با بهبود نحوه مدیریت وابستگی‌ها در زبان‌های C و C++ توانستند که ۴۰ درصد حجم کد را کاهش داده و باعث افزاش سرعت <a href="http://en.wikipedia.org/wiki/Software_build" rel="nofollow">build</a> شوند.</li>
+<li>هزینه بروزرسانی: در این سیستم ها به خاطر وابستگی‌های زیاد و تیم بزرگ بروزرسانی کدها یا وابستگی‌ها کار بسیار سخت و دشواری است.</li>
+<li>سختی نوشتن ابزارهای اتوماتیک: بخاطر بزرگی کد و وابستگی‌هایشان نوشتن روندهای اتوماتیک مانند تست، <a href="http://en.wikipedia.org/wiki/Software_build" rel="nofollow">build</a> یا <a href="http://en.wikipedia.org/wiki/Software_deployment" rel="nofollow">deploy</a> بسیار سخت بوده و به همین خاطر افراد بیشتری برای کارهای عملیاتی یا توسعه ابزارهای اتوماتیک نیاز است.</li>
+</ul>
+
+
+<h2>اهداف طراحی <a href="http://golang.org/" rel="nofollow">golang</a></h2>
+
+<p>اهداف طراحی <a href="http://golang.org/" rel="nofollow">golang</a> عبارتند از:
+- این زبان بایستی بتواند توسط تیم بزرگی از برنامه نویسان برای برنامه‌های بزرگ که وابستگی‌های فراوانی دارند مورد استفاده قرار گیرد.
+- این زبان بایستی به زبان‌های هم‌خانواده C نزدیک باشد. زیرا بسیاری از برنامه‌نویسان گوگل تازه کار بوده و با برنامه نویسی‌ رویه‌ای و یکی از زبان‌های هم‌خانواده C آشنایی دارند. این باعث کارایی زودهنگام این دست برنامه‌نویسان می‌شود.
+- این زبان بایستی مدرن باشد. زبان‌های C و C++ و تا حدی Java قدیمی بوده و قبل از تکنولوژی‌های مدرن امروز مانند پرازنده‌های چند هسته‌ای، شبکه و عصر وب طراحی شده‌اند. یکی از ویژگی‌های دنیای مدرن که می‌تواند بهتر مورد بررسی قرار گیرد همروندی است.</p>
+
+<h2>ویژگی‌های زبان</h2>
+
+<p>در این بخش بصورت مختصر ویژگی‌های زبان ارائه می‌شود.</p>
+
+<ul>
+<li>کوچک بودن: این زبان به نسبت زبان‌های دیگر کوچک است
+
+<ul>
+<li>تعداد کلمات کلیدی این زبان(۲۵ کلمه) نسبت به سایر زبانها مانند C++11(۸۶ کلمه)، Java(۵۰ کلمه)، ES6(۴۸ کلمه)، پایتون۳(۳۳ کلمه) و سی (۳۲ کلمه) کمتر است.</li>
+<li>سینتکس این زبان برای آنان که C یاد گرفته اند ساده و روان است.</li>
+<li>مستندات عالی برای شروع دارد(<a href="https://tour.golang.org" rel="nofollow">این</a>  <a href="https://golang.org/doc/effective_go.html" rel="nofollow">لینک</a>  <a href="https://gobyexample.com" rel="nofollow">ها</a>)</li>
+</ul>
+</li>
+<li>مدیریت وابستگی‌ها: این زبان به نحوه جالبی وابستگی‌ها را مدیریت می‌کند. ویژگی‌های این فرآیند به صورت زیر است:
+
+<ul>
+<li>نیازی به فایل Header نیست.</li>
+<li>وابستگی‌های استفاده نشده باعث کامپایل نشدن کد می‌شوند</li>
+<li>در گراف وابستگی‌های فایلهای یک پروژه نبایستی دور وجود داشته باشد.</li>
+</ul>
+</li>
+<li>رویه‌گرا: رویه گرایی در این زبان باعث می‌شود که ساختار برنامه شبیه به C باشد. ممکن است برای شما این سوال پیش آید که آیا <a href="http://golang.org/" rel="nofollow">golang</a> یک زبان شی گراست یا نه؟ جواب به این سوال هم آری است هم نه
+جواب به این سوال می‌تواند نه باشد زیرا :
+
+<ul>
+<li>اثری از کلاسها و ارتباط بین آنها نیست.</li>
+<li>هم چیز یک <a href="http://en.wikipedia.org/wiki/Object_(computer_science)" rel="nofollow">object</a> نیست.</li>
+<li>خبری از <a href="http://en.wikipedia.org/wiki/Software_design_pattern" rel="nofollow">الگوهای طراحی</a> نیست.</li>
+<li>چارچوب‌ها و کتابخانه‌های پیچیده شی‌گرایی وجود ندارند.
+جواب به این سوال آری است زیرا:</li>
+<li>مکانیزمهای <a href="http://en.wikipedia.org/wiki/Message_passing" rel="nofollow">تبادل پیام</a> وجود دارد.</li>
+<li>پنهان سازی و کپسوله سازی وجود دارد.</li>
+<li>چندریختی و <a href="http://en.wikipedia.org/wiki/Polymorphism_%28computer_science%29" rel="nofollow">polymorphism</a> وجود دارد.</li>
+<li>وراثت وجود دارد.</li>
+</ul>
+</li>
+<li>تایپ استاتیک: سیستم مدیریت تایپ‌های زبان <a href="http://golang.org/" rel="nofollow">golang</a> ایستاست. بدین معنی که تایپ‌ها در زمان کامپایل چک می‌شوند. همچنین وجود تایپ ایستا باعث می‌شود کامپایلر بتواند بهینه‌سازی بیشتری رو متغیرها کد نهایی ایجاد کند.</li>
+<li>کامپایل به کد ماشین و لینک استاتیک: این باعث می‌شود که کدها کامپایل شده و در سیستم عامل مقصد اجرا می‌شود. به همین خاطر:
+
+<ul>
+<li>هیچ مفسری وجود ندارد</li>
+<li>ماشین مجازی وجود ندارد مانند <a href="http://en.wikipedia.org/wiki/Java_virtual_machine" rel="nofollow">JVM</a>.</li>
+<li>هیچ ترجمه زمان اجرایی وجود ندارد مانند <a href="http://en.wikipedia.org/wiki/Just-in-time_compilation" rel="nofollow">JIT</a> در <a href="http://en.wikipedia.org/wiki/.NET_Framework" rel="nofollow">.Net Framework</a>.</li>
+<li>هیچ پیش‌نیازی برای اجرا وجود ندارد.</li>
+</ul>
+</li>
+<li>دارای سیستم <a href="https://golang.org/pkg/runtime/" rel="nofollow">runtime</a> و <a href="http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)" rel="nofollow">Garbage Collection</a> : سیستم <a href="https://golang.org/pkg/runtime/" rel="nofollow">runtime</a> بدین صورت است که زیرساختی برای اجرای ویژگی‌های همروندی <a href="http://golang.org/" rel="nofollow">golang</a> ایجاد می‌کند. در حقیقت این سیستم بسیاری از موارد پر دردسر همروندی را از دید برنامه نویس مخفی می‌کند. همچنین این سیستم باعث می‌شود که بتوان در این زبان از روند <a href="http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)" rel="nofollow">Garbage Collection</a> استفاده کرد. این امر باعث ساده‌شدن روند مدیریت حافظه و کاهش خطاهای زمان اجرا می‌شود.</li>
+<li>امکانات سطح بالای همروندی: برنامه نویسی همروند اصلا کار آسانی نبوده و نیست. همروندی در سطوح مختلفی قابل دستیابی است. در بالاترین سطح می‌توان چندین پروسه داشت که کارهای مشابهی انجام می‌دهند اما پروسه‌ها بسیار سنگین و پرهزینه هستند. استفاده از <a href="http://en.wikipedia.org/wiki/Thread_(computing)" rel="nofollow">Thread</a>ها به علت سبک‌تر بودن می‌تواند مشکلات را کاهش دهد. راه حل سوم پیشنهاد شده استفاده از برنامه نویسی غیرهمگام است که باعث پیچیده‌گی بسیار توسعه و عیب‌یابی نرم‌افزار می‌گردد. <a href="http://golang.org/" rel="nofollow">golang</a> با معرفی مکانیزم <a href="https://golang.org/doc/effective_go.html#goroutines" rel="nofollow">goroutine</a> و با کمک <a href="https://golang.org/pkg/runtime/" rel="nofollow">runtime</a> روند توسعه نرم‌افزار غیر همگام را به شدت ساده می‌کند. ویژگی‌های <a href="https://golang.org/doc/effective_go.html#goroutines" rel="nofollow">goroutine</a>ها عبارتند از:
+
+<ul>
+<li>ایجاد آنها همانند <a href="http://en.wikipedia.org/wiki/Thread_(computing)" rel="nofollow">Thread</a>ها در زمان اجرا</li>
+<li>استفاده اشتراکی از حافظه</li>
+<li>زمانبندی <a href="https://golang.org/doc/effective_go.html#goroutines" rel="nofollow">goroutine</a> ها در <a href="https://golang.org/pkg/runtime/" rel="nofollow">runtime</a> انجام می‌شود</li>
+<li>تعدادی <a href="https://golang.org/doc/effective_go.html#goroutines" rel="nofollow">goroutine</a> برای اجرا روی چندین <a href="http://en.wikipedia.org/wiki/Thread_(computing)" rel="nofollow">Thread</a> اجرا می‌شوند.</li>
+<li>سایز حافظه <a href="https://golang.org/doc/effective_go.html#goroutines" rel="nofollow">goroutine</a> ها در زمان اجرا تغییر می‌کند.
+همچنین امکان ارتباط میان <a href="https://golang.org/doc/effective_go.html#goroutines" rel="nofollow">goroutine</a> به کمک مکانیزم <a href="http://en.wikipedia.org/wiki/Message_passing" rel="nofollow">تبادل پیام</a> در ویژگی‌های اولیه زبان بوجود آمده است.</li>
+</ul>
+</li>
+<li>کتابخانه استاندارد غنی: <a href="http://golang.org/" rel="nofollow">golang</a> کتابخانه‌های بسیاری برای کارهای مختلف دارد که این کتابخانه باعث افزایش سرعت توسعه می‌گردد.</li>
+<li>ابزارها: <a href="http://golang.org/" rel="nofollow">golang</a> ابزارهایی بار کامپایل، نصب، <a href="http://en.wikipedia.org/wiki/Software_build" rel="nofollow">build</a> و حتی بهبود فرمت کد دارد.</li>
+</ul>
+
+
+<h2>ایرادات وارده</h2>
+
+<p>برخی از ویژگی‌های <a href="http://golang.org/" rel="nofollow">golang</a> خود می‌تواند از منظری نوعی نقص و کمبود باشد.</p>
+
+<ul>
+<li>کوچک بودن زبان عملا باعث می‌شود بسیاری از امکاناتی که در زبان‌های دیگر وجود دارد در این زبان وجود نداشته باشد. ممکن است کاری که در زبان‌های دیگر به سادگی قابل انجام است در این زبان با مشکل همراه شود</li>
+<li>سیستم تایپ استاتیک زبان به علت کوچک بودن امکاناتی را که سیستم به عنوان مثال جاوا در اختیار کاربران قرار می‌دهد را ندارد.</li>
+<li>عدم وجود شی‌گرایی باعث ایجاد دردسرهایی شده و حتی امکان استفاده مجدد از کد و تجربیات گذشته را از بین می‌برد.</li>
+<li>وجود سیستم <a href="https://golang.org/pkg/runtime/" rel="nofollow">runtime</a> باعث می‌شود در سیستم‌های <a href="http://en.wikipedia.org/wiki/Mission_critical" rel="nofollow">mission critical</a> نتوان با قطعیت در مورد زمان‌بندی و اجرای کدها تصمیم گرفت که عملا این زبان را از رده‌ی زبان‌های سیستمی دور می‌شود.</li>
+<li>وجود مکانیزم ارتباط بین <a href="https://golang.org/doc/effective_go.html#goroutines" rel="nofollow">goroutine</a> ها عملا سربار زمان اجرا اعمال کرده و در حالت‌هایی که ارتباط بسیاری میان اجزای سیستم برقرار است این سربار قابل توجه است.</li>
+</ul>
+
+
+<h2>چه کسانی از <a href="http://golang.org/" rel="nofollow">golang</a> استفاده می‌کنند؟</h2>
+
+<ul>
+<li>پروژه <a href="http://docker.com" rel="nofollow">docker</a> به عنوان یکی از بزرگترین استفاده کننده‌ها از این زبان است. این پروژه با بوجود آوردن یک لایه روی امکانات کرنل لینوکس و با استفاده از یک مسیر کسب و کاری جدید این امکان را فراهم آورده تا <a href="http://en.wikipedia.org/wiki/Operating-system-level_virtualization" rel="nofollow">container</a> ها دوباره بحث داغ این روزها باشند.</li>
+<li>در خود <a href="http://google.com" rel="nofollow">Google</a> به عنوان مثال در <a href="http://youtube.com" rel="nofollow">youtube</a> از <a href="http://golang.org/" rel="nofollow">golang</a> استفاده میکند. به عنوان مثال می‌توان به پروژه <a href="https://github.com/youtube/vitess" rel="nofollow">vitess</a> اشاره کرد.</li>
+<li>سرویس <a href="https://www.heroku.com">Heroku</a> یکی دیگر از استفاده کنندگان این زبان است و به عنوان مثال درایور <a href="http://www.postgresql.org/" rel="nofollow">postgresql</a> در زبان <a href="http://golang.org/" rel="nofollow">golang</a> توسط آنها نگهداری می‌شود.این پایگاه داده بخش مهمی در زیرساخت این شرکت است.</li>
+<li>شرکت <a href="http://www.canonical.com/" rel="nofollow">Canonical</a> سیستم <a href="http://en.wikipedia.org/wiki/Juju_(software)" rel="nofollow">juju</a> خود را بصورت کامل با این زبان بازنویسی کرده‌است.</li>
+<li>شرکت <a href="http://soundcloud.com" rel="nofollow">soundcloud</a> نیز در زیرساخت خود از این زبان استفاده می‌کند.</li>
+<li>سرویس <a href="http://bit.ly" rel="nofollow">bitly</a>، این سرویس نیز برای پاسخگویی به هزاران درخواست در ثانیه سیستم خود را بصورت کامل توسط <a href="http://golang.org/" rel="nofollow">golang</a> بازنویسی کرده است.</li>
+<li>سرویس <a href="http://iron.io" rel="nofollow">Iron.io</a> که یک سیستم انجام محاسبات در محیط ابری است کل سرویس خود را به <a href="http://golang.org/" rel="nofollow">golang</a> مهاجرت داده است.</li>
+<li>سرویس <a href="http://drone.io" rel="nofollow">Drone.io</a> یک سیستم <a href="http://en.wikipedia.org/wiki/Continuous_integration" rel="nofollow">continous integration</a> است که به زبان <a href="http://golang.org/" rel="nofollow">golang</a> توسعه یافته است.</li>
+</ul>
+
+
+<h2>منابع و مطالعه بیشتر</h2>
+
+<ul>
+<li><a href="http://taakestan.com/webinars/go/go-webinar-slides-taakproject.pdf" rel="nofollow">منبع اول</a></li>
+<li><a href="http://blog.smartbear.com/programming/an-introduction-to-the-go-language-boldly-going-where-no-man-has-ever-gone-before/" rel="nofollow">منبع دوم</a></li>
+<li><a href="https://sendgrid.com/blog/intro-to-go-programming-language/" rel="nofollow">منبع سوم</a></li>
+<li><a href="http://www.zhubert.com/blog/2014/01/12/introduction-to-go-golang-part-1/" rel="nofollow">منبع چهارم</a></li>
+<li><a href="http://talks.golang.org/2012/splash.article" rel="nofollow">منبع پنجم</a></li>
+<li><a href="http://golang-for-python-programmers.readthedocs.org/en/latest/intro.html" rel="nofollow">منبع ششم</a></li>
+<li><a href="http://viget.com/extend/diving-into-go-a-five-week-intro" rel="nofollow">منبع هفتم</a></li>
+</ul>
+
