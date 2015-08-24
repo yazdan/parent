@@ -8,8 +8,14 @@
 
 همین!
 
+**بروزرسانی**: با توجه به اینکه [فرود] عزیر تجربه contribute کردن به این پروژه رو داشتن، گفتن که [نحوه اداره] این پروژه خیلی بده و به همین خاطر یک fork از این برنامه به اسم [gitea] بوجود اومده که انگار بهتر مدیریت میشه. و اینکه کلا توجه داشته باشید که تخم مرغ‌هاتون رو توی یک سبد نگذارید!
+
+
 [golang]: http://golang.org
 [github]: https://github.com
 [notabug]: https://notabug.org
 [git]:http://git-scm.com
 [Gogs]:https://gogs.io
+[gitea]:https://github.com/go-gitea/gitea
+[نحوه اداره]:https://github.com/gogits/gogs/issues/1304
+[فرود]:https://twitter.com/fzerorubigd
