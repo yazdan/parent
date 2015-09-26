@@ -12,3 +12,13 @@
 [Stash]: https://www.atlassian.com/software/stash
 [gogs]: http://gogs.io/
 
+
+
+
+http://www.git-tower.com/blog/git-hosting-services-compared/
+https://github.com/sitaramc/gitolite
+https://www.clearvision-cm.com/git/
+https://git.wiki.kernel.org/index.php/GitHosting
+http://getgitorious.com/
+https://en.wikipedia.org/wiki/Git_%28software%29
+
