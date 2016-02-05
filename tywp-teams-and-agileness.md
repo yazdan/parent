@@ -12,3 +12,7 @@
 
 انشالا در آینده نزدیک بیشتر از این کتاب می‌نویسم.
 همین!
+
+[سال بدون شلوار]:http://www.goodreads.com/book/show/17396014-the-year-without-pants
+[refactor]:https://en.wikipedia.org/wiki/Code_refactoring
+[agile]:https://en.wikipedia.org/wiki/Agile_software_development
