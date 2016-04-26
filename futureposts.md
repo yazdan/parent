@@ -7,4 +7,6 @@
 کامپایل کردن go برای arm
 گیت: آموزش کوتاه submodule
 گیت: آموزش pull request
+آموزش crosstool-ng
+نوشتن در مورد markdown و گزارش و اینا
 
