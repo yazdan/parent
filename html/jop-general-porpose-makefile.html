@@ -1,0 +1,53 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>من قبلا هم در مورد ابزارهایی مثل <a href="https://en.wikipedia.org/wiki/Makefile">makefile</a> و <a href="https://en.wikipedia.org/wiki/CMake">cmake</a> که کامپیال کردن نرم‌افزارها بالاخص در زبان‌های C/C++ رو راحت می‌کنن نوشتم. البته باید بگم که هیچوقت بصورت کامل و درستی یاد نگرفتم که <a href="https://en.wikipedia.org/wiki/Makefile">makefile</a> چطوره و چطور میشه باهاش سرو کله زد تا اینکه در یکی از پروژه‌ها مجبور به استفاده از <a href="https://en.wikipedia.org/wiki/Makefile">makefile</a> شدم و با کمک یکی از دوستان یه <a href="https://sourceforge.net/projects/gcmakefile/">پروژه متن‌باز</a> پیدا کرد که یه مدل آماده <a href="https://en.wikipedia.org/wiki/Makefile">makefile</a> که توش تقریبا همه کارهای معمول انجام شده بود رو آورده بود.</p>
+
+<p>توی این پست سعی درام که این <a href="https://sourceforge.net/projects/gcmakefile/">پروژه متن‌باز</a> رو معرفی کنم. خب اول باید بگم که شما برای هر پروژه جدید نیاز دارید که چندتا چیز رو مشخص کنید</p>
+
+<ol>
+<li>اینکه بدونید سورس پروژه کجاست.</li>
+<li>اینکه فولدرهایی که header ها توش قرار گرفته کجاست</li>
+<li>اینکه بدونید برنامه‌تون به چه کتابخانه‌هایی نیاز داره</li>
+<li>اینکه بدونید برنامه‌تون برای کامپیال شدن به کمک <a href="https://en.wikipedia.org/wiki/GNU_Compiler_Collection">GCC</a> به چه <a href="https://en.wikipedia.org/wiki/Parameter_(computer_programming)#Parameters_and_arguments">flag</a>هایی نیاز داره.</li>
+</ol>
+
+
+<p>بعد از اینکه این موارد رو دونستید و اونها رو پیدا کردید باید برید و بخشها مرتبط با این موارد رو توی <a href="https://en.wikipedia.org/wiki/Makefile">makefile</a> تغییر بدید به عنوان Customizable Section مشخص شده.</p>
+
+<pre><code>## Customizable Section: adapt those variables to suit your program.
+##==========================================================================
+
+# The pre-processor and compiler options.
+MY_CFLAGS =
+
+# The linker options.
+MY_LIBS   =
+
+# The pre-processor options used by the cpp (man cpp for more).
+CPPFLAGS  = -Wall
+
+# The options used in linking as well as in any direct use of ld.
+LDFLAGS   =
+
+# The directories in which source files reside.
+# If not specified, only the current directory will be serached.
+SRCDIRS   =
+
+# The executable file name.
+# If not specified, current directory name or `a.out' will be used.
+PROGRAM   =
+</code></pre>
+
+<p>خب هر یک از این بخش‌های قابل تغییر برای خودش معنایی داره</p>
+
+<ol>
+<li>بخش <code>MY_CFLAGS</code> مقدار <a href="https://en.wikipedia.org/wiki/Parameter_(computer_programming)#Parameters_and_arguments">flag</a> هایی هست که برای کامپیال کردن فایلها با پسوند c به کار میره. لازه به ذکره که بدونید <a href="https://en.wikipedia.org/wiki/Parameter_(computer_programming)#Parameters_and_arguments">flag</a>های C با C++ می‌تونن تفاوت اساسی داشته باشند</li>
+<li>بخش <code>MY_LIBS</code> نشون‌دهنده <a href="https://en.wikipedia.org/wiki/Parameter_(computer_programming)#Parameters_and_arguments">flag</a> هایی هست که در فاز <a href="https://en.wikipedia.org/wiki/Linker_(computing)">link</a> قرار به <a href="https://en.wikipedia.org/wiki/Linker_(computing)">linker</a> داده بشه و با استفاده از اون کتابخانه ها شناسونده بشن. یه مثال برای این مقدار <code>-lpthread</code> هست که میگه کتابخانه <code>pthread</code> مورد نیاز این نرم‌افزار هست</li>
+<li>بخش <code>CPPFLAGS</code> بخشی هست که نشون میده <a href="https://en.wikipedia.org/wiki/Parameter_(computer_programming)#Parameters_and_arguments">flag</a>های کامپایل c++ چیا هستن. مثلا <code>-std=gnu++11</code> که نشون میده میخوایم از استاندارد <a href="https://en.wikipedia.org/wiki/C%2B%2B11">C++ 2011</a> استفاده کنیم. فولدر headerها رو هم توی این بخش اضافه می‌کنیم</li>
+<li>اگه به هر دلیل بخوایم <a href="https://en.wikipedia.org/wiki/Parameter_(computer_programming)#Parameters_and_arguments">flag</a>های دیگه ای به <a href="https://en.wikipedia.org/wiki/Linker_(computing)">linker</a> بدیم از <code>LDFLAGS</code> استفاده می‌کنیم.</li>
+<li>سورس نرم‌افزار رو با <code>SRCDIRS</code> جاهایی که سورس قرار گرفته رو نشون میده.</li>
+<li>و در نهایت <code>PROGRAM</code> نام نرم‌افزار رو نشون میده.</li>
+</ol>
+
+
+<p>امیدوارم با این توضیحات کوتاه دستتون اومده باشه که چه کاری رو به چه صورت باید انجام بدید و در صورت هرگونه سوالی کامنت بگذارید و یادتون نره که من هنوز <a href="https://en.wikipedia.org/wiki/Makefile">makefile</a> رو بخوبی بلد نیستم! ;)</p>
