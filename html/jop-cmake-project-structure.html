@@ -1,0 +1,64 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>متاسفانه یه مدت میشه که سرم بیش از اندازه شلوغ شده و نرسیدم وبلاگ بنویسم.  <a href="http://blog.abyz.ir/1394/04/jop-cmake-introduction/">قبلا</a> در مورد <a href="http://cmake.org">cmake</a> نشوتم و حالا خواستم یکم بیشتر بنویسم.</p>
+
+<p>خب توی این پست سعی میکنم که بگم که توی دنیای واقعی من از <a href="http://cmake.org">cmake</a> چطور میتونم استفاده کنم. توی دنیای واقعی معمولا پروژه از این بخش‌ها تشکیل شده:</p>
+
+<ol>
+<li>یه سری سورس که اصل منطق برنامه اونجا پیاده سازی شده</li>
+<li>یه فایل اصلی یا main که تابع اصلی نرم افزار اونجا قرار گرفته</li>
+<li>احتمالا یه سری تست که نرم افزار رو بصورت اتوماتیک مورد تست قرار میدن</li>
+<li>احتمالا یه سری کتابخانه که بصورت <a href="https://en.wikipedia.org/wiki/Static_library">static</a> یا <a href="https://en.wikipedia.org/wiki/Dynamic_linker">dynamic</a> به کد اضافه میشن.</li>
+</ol>
+
+
+<p>یه خورده توضیح بدم که توی م<a href="http://cmake.org">cmake</a> معمولا یه چیزی داریم به عنوان خروجی که میتونه از جنس فایل اجرایی باشه یا از جنس کتابخانه. ما با ترکیب کتابخانه‌ها و سورس کدهای موجود فایل اجرایی نهایی رو درست میکنیم. روند کار هم معمولا به این صورته که:
+1. سورسهای اصلی بصورت یه کتابخانه <a href="https://en.wikipedia.org/wiki/Static_library">static</a> کامپایل میشه
+2. فایل اصلی برنامه بصورت یک فایل اجرایی کامپایل شده و به کتابخانه سورس‌های اصلی لینک میشه
+3. تست کیسها بصوت یک فایل اجرایی کامپایل شده و به کتابخانه سورس‌هاس اصلی لینک میشه.
+4. کتابخانه ها هم به فایل اجرایی اضافه میشن.</p>
+
+<p>حالا اگه مثال بخوایم یه پروژه رو مثال بزنم که ساختار کدش به شکل زیره</p>
+
+<pre><code>inc/
+ +-------- utility.h
+src/
+ +-------- utility.c
+ +-------- main.c
+tst/
+ +-------- main.c
+</code></pre>
+
+<p>فایل <a href="https://en.wikipedia.org/wiki/CMake">CMakeLists.txt</a> این پروژه یه چیزی شبیه این خواهد بود</p>
+
+<pre><code>PROJECT(abyz-cmake-test)
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/inc")
+
+SET(appLib_src
+    src/utility.c
+  )
+ADD_LIBRARY(applibstatic
+    STATIC
+    ${appLib_src}
+  )
+ADD_EXECUTABLE(abyz-cmake-test
+    src/main.cpp
+  )
+TARGET_LINK_LIBRARIES(abyz-cmake-test
+    applibstatic
+  )
+ADD_EXECUTABLE(unittester
+    tst/main.c
+  )
+
+TARGET_LINK_LIBRARIES(unittester
+    applibstatic
+  )
+</code></pre>
+
+<p>شامل یک کتابخانه <a href="https://en.wikipedia.org/wiki/Static_library">static</a> و دو فایل اجرایی یکی اصل برنامه و دیگری تست برنامه.</p>
+
+<p>همین!</p>
