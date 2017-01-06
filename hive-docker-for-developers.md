@@ -2,6 +2,8 @@
 
 #معرفی داکر
 
+
+
 ## مفاهیم مختلف داکر
 
     Docker client: this is what's running in our machine. It's the docker binary that we'll be interfacing with whenever we open a terminal and type $ docker pull or $ docker run. It connects to the docker daemon which does all the heavy-lifting, either in the same host (in the case of Linux) or remotely (in our case, interacting with our VirtualBox VM).
