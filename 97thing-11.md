@@ -14,6 +14,6 @@
 
 در آپارات:
 
-<div id="14820916715197749"><script type="text/JavaScript" src="https://www.aparat.com/embed/MzaGw?data[rnddiv]=14820916715197749&data[responsive]=yes"></script></div>
+<div id="14837381126260989"><script type="text/JavaScript" src="https://www.aparat.com/embed/aOwei?data[rnddiv]=14837381126260989&data[responsive]=yes"></script></div>
 
 
