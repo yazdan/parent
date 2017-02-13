@@ -1,0 +1,43 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>نوشتن این روزها سخت شده ولی من باز سعی میکنم که یه حضور کمرنگی در صحنه داشته باشم. این دفعه میخواستم در مورد یه موضوع جالب مرتبط با متغیر در سی بنویسیم</p>
+
+<h2>مشکل با متغیر محلی بزرگ</h2>
+
+<p>ما یه کد سی داشتیم که یه متغیر <a href="https://en.wikipedia.org/wiki/Local_variable">local</a> با حجم حدودا ۱۰ کیلو بایت تعریف شده بود و مقدار دهی اولیه شده بود(عکس بود). همیشه کامپایلر به این قسمت از کد که میرسید کلی طول میکشید تا بتونه کد رو کامپایل کنه و همیشه اعصاب ما رو خورد میکرد. تا اینکه یه روز تصمیم گرفتیم مشکل رو حل کنیم. راه حل‌هایی که پیش رومون بود اینها:</p>
+
+<ol>
+<li>متغیر رو کلا حذف کنیم. که خب نمیخواستیم صورت مساله رو حذف کنیم</li>
+<li>متغیر رو <a href="https://en.wikipedia.org/wiki/Global_variable">global</a> میکردیم که خب همه میتونستن تغییرش بدن و برامون بد بود</li>
+<li>متغیر رو <a href="https://en.wikipedia.org/wiki/Static_variable">static</a> کنیم. این تفاوتی برای ما نداشت فقط میخواستیم امتحان کنیم.</li>
+</ol>
+
+
+<p>خب اول راه دوم رو امتحان کردیم. اتفاقا هم زمان کامپایل کم شد و هم حجم باینری تولید شده. وقتی راه سوم رو هم امتحان کردیم دیدیم که نتیجه با راه دوم یکیه و حجم باینری کم شده و این خوب بود. چون راه دوم ویژگی‌های متغیر <a href="https://en.wikipedia.org/wiki/Local_variable">local</a> رو داشت و عیب در دسترس بودن برای همه رو هم نداشت.</p>
+
+<h2>بررسی چرایی راه‌حل</h2>
+
+<p>سوالی که برای ما پیش اومد این بود که چرا یه تغییر اینجوری اینهمه هم توی سرعت هم حجم باینری موثره؟ برای جواب دادن به این ماجرا یکم رفتم تحقیق کردم:</p>
+
+<ul>
+<li>همه باینری‌ها از بخش‌های مختلفی تشکلی شدن که اگه <a href="https://en.wikipedia.org/wiki/Assembly_language">assembly</a> یادتون باشه شامل اینهاست
+
+<ul>
+<li>بخش کد یا <a href="https://en.wikipedia.org/wiki/Code_segment">code segment</a></li>
+<li>بخش پشته یا <a href="https://en.wikipedia.org/wiki/Data_segment#Stack">stack segment</a></li>
+<li>بخش داده یا <a href="https://en.wikipedia.org/wiki/Data_segment">data segment</a></li>
+</ul>
+</li>
+<li>متوجه شدم که  متغیرهای <a href="https://en.wikipedia.org/wiki/Global_variable">global</a> توی <a href="https://en.wikipedia.org/wiki/Data_segment">data segment</a> تعریف میشن و متغیرهای <a href="https://en.wikipedia.org/wiki/Local_variable">local</a> توی <a href="https://en.wikipedia.org/wiki/Data_segment#Stack">stack segment</a> تعریف میشن.</li>
+<li>متوجه شدم که متغیرهای static هم توی <a href="https://en.wikipedia.org/wiki/Data_segment">data segment</a> تعریف میشن.</li>
+</ul>
+
+
+<p>پس هرچی بود زیر سر <a href="https://en.wikipedia.org/wiki/Data_segment">data segment</a> بود از اینجا به بعدش بازی شد حدس و گمان در مورد چرایی دوتا اتفاق:
+- چرا سرعت کامپیال بیشتر؟ احتمالا به این دلیل که کامپایلر با <a href="https://en.wikipedia.org/wiki/Data_segment">data segment</a> راحت‌تر کار میکنه تا <a href="https://en.wikipedia.org/wiki/Data_segment#Stack">stack segment</a>. اما این حدس حجم باینری کمتر رو توجیه نمیکنه چون در این دوحالت حجم متغیر ثابت مونده
+- چرا حجم باینری کمتر؟ برای اینکار یکم باید یادمون بیاد توی <a href="https://en.wikipedia.org/wiki/Assembly_language">assembly</a> که چطور یه متغیر <a href="https://en.wikipedia.org/wiki/Local_variable">local</a> تعریف میشه منظورم هست. یه متغیر <a href="https://en.wikipedia.org/wiki/Local_variable">local</a> عملا اینه که اول یه مقداری توی stack قرار میگیره و در یه مرحله دیگه اون مقدار از stack خارج میشه. که این هم نیاز به کد سمت <a href="https://en.wikipedia.org/wiki/Code_segment">code segment</a> داره هم نیاز به حافظه سمت <a href="https://en.wikipedia.org/wiki/Data_segment#Stack">stack segment</a> داره.</p>
+
+<p>خب با این حالت ما به حدس دقیق تری از اتفاق پشت پرده رسیدیم. اونم اینه که وقتی متغیر توی <a href="https://en.wikipedia.org/wiki/Data_segment">data segment</a> قرار میگیره یه بخش توسط کامپایلر تخصیص داده میشه و مقادیر هم توی اون خونه‌ها نوشته میشه. ولی وقتی قرار باشه اون متغیر توی <a href="https://en.wikipedia.org/wiki/Data_segment#Stack">stack segment</a> قرار بگیره هم کد تولید میشه هم حافظه تخصیص داده میشه که منجر به طولانی تر شدن کل روند میشه.</p>
+
+<p>امیدوارم به دردتون خورده باشه
+همین!</p>
