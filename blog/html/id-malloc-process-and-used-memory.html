@@ -1,0 +1,78 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>چند شب پیش یکی از دوستان با این سوال به سراغ من اومد:</p>
+
+<blockquote><p>مشکل اینه که وقتی با <a href="https://linux.die.net/man/3/malloc">malloc</a> یا <a href="http://www.cplusplus.com/reference/new/operator%20new/">new</a> یک حافظه تخصیص میدی و با <a href="https://linux.die.net/man/3/malloc">free</a> یا <a href="http://www.cplusplus.com/reference/new/operator%20delete/">delete</a> حافظه رو برمیگیردونی, اون حافظه شاید بلاک هاش خالی بشه اما توی تسک لیست خالی به عنوان منابع استفاده شده میاره و تا پایان <a href="http://www.tldp.org/LDP/tlk/kernel/processes.html">پروسه</a> پاک نمیشه. از دوستانی که آشنایی دارن پیگیری کن ببین جریان چیه. مهمه .</p>
+
+<p>خدا خیرت بده. یه جایی از حافظه نمایی رشد میکه و وقتی خالیش میکنیم (با اینکه از لیست <a href="https://en.wikipedia.org/wiki/Data_segment#Heap">heap</a> سیستم عامل خالی میشه) اما توی لیست <a href="http://www.tldp.org/LDP/tlk/kernel/processes.html">پروسه</a>‌ها(مثل نتیجه <a href="https://linux.die.net/man/1/ps">ps</a>) هنوز به عنوان حافظه استفاده شده هست و حافظه آزاد نمیشه !!!‌ عجیبه . کلی توی اینترنت اینو سوال کردن !!</p>
+
+<p>من که لینوکسم. اما فکر کنم ویندوزم همینه. چون سوالای اینترنت هردوشونه</p></blockquote>
+
+<p>کلا بخوام سوال رو خلاصه کنم اینجوریه که چرا وقتی حافظه رو به سیستم‌عامل پس میدیم واقعا پس داده نمیشه. من یکم از دانسته‌هام استفاده کردم و یکم هم تحقیقات کردم</p>
+
+<h2>پیش‌نیازها</h2>
+
+<p>پیش نیازهایی که به نظرم باید بدونیم ایناست:</p>
+
+<ul>
+<li><p>نکته صفر اینکه با توجه به تحقیقات من زیر کلمه کلیدی <a href="http://www.cplusplus.com/reference/new/operator%20new/">new</a> از همون <a href="https://linux.die.net/man/3/malloc">malloc</a> استفاده میشه. پس بررسی <a href="https://linux.die.net/man/3/malloc">malloc</a> به تنهایی میتونه جوابی برای ما فراهم کنه.</p></li>
+<li><p>اول اینکه باید بدونیم که وقتی <a href="https://linux.die.net/man/3/malloc">malloc</a> صدا زده میشه چه اتفاقی میفته. کاری که <a href="https://linux.die.net/man/3/malloc">malloc</a> میکنه اینه که <a href="https://en.wikipedia.org/wiki/Data_segment#Heap">heap</a>  <a href="http://www.tldp.org/LDP/tlk/kernel/processes.html">پروسه</a> رو بهت اختصاص میده. حالا <a href="https://en.wikipedia.org/wiki/Data_segment#Heap">heap</a> توسط سیستم عامل مدیریت میشه و در صورت نیاز به <a href="http://www.tldp.org/LDP/tlk/kernel/processes.html">پروسه</a>‌ی شما حافظه بیشتری تخصیص میده.</p></li>
+<li><p>دوم اینکه فضای <a href="https://en.wikipedia.org/wiki/Data_segment#Heap">heap</a> توسط کرنل مدیریت میشه و به اصطلاح نگاشته میشه به یه چیزی به نام <a href="http://www.tldp.org/LDP/sag/html/vm-intro.html">Virtual Memory</a></p></li>
+<li><p>سوم اینکه<a href="http://www.tldp.org/LDP/sag/html/vm-intro.html">Virtual Memory</a> نگاشته میشن به چیزی به نام <a href="https://en.wikipedia.org/wiki/Paging#Linux">Memory Page</a> که نزدیک به سخت افزار تره</p></li>
+<li><p>چهارم اینکه <a href="https://en.wikipedia.org/wiki/Paging#Linux">Memory Page</a> نگاشته میشن بلوک‌های واقعی حافظه. از این مطمئن نیستم اما این نزدکترین لایه به سخت افزاره که من باهاش آشنا هستم.</p></li>
+</ul>
+
+
+<h2>بررسی مساله</h2>
+
+<p>حالا اگه بخوایم مساله رو بررسی کنیم باید به چند‌تا سوال جواب بدیم:</p>
+
+<ul>
+<li>اول اینکه <a href="https://linux.die.net/man/3/malloc">malloc</a> چطور عمل میکنه؟ در پیاده‌سازیش ساز و کارش چیه؟</li>
+<li>دوم اینکه روند افزایش طول <a href="http://www.tldp.org/LDP/sag/html/vm-intro.html">Virtual Memory</a> و اضافه شدن <a href="https://en.wikipedia.org/wiki/Paging#Linux">Memory Page</a>ها چطوره؟</li>
+<li>سوم اینکه بعد از پس دادن <a href="https://en.wikipedia.org/wiki/Paging#Linux">Memory Page</a>ها سیستم عامل چطور اونها رو از یک <a href="http://www.tldp.org/LDP/tlk/kernel/processes.html">پروسه</a> پس میگیره؟</li>
+</ul>
+
+
+<p>خب جواب سوالا به ترتیب اینا به نظر میرسن:</p>
+
+<ul>
+<li><p>پیاده‌سازی‌های متفاوتی از <a href="https://linux.die.net/man/3/malloc">malloc</a> وجود داره</p>
+
+<ul>
+<li>پیاده‌سازی معمولا اون اینطوریه که پس از گرفتن حافظه وقتی <a href="https://linux.die.net/man/3/malloc">free</a> شد معمولا اونها رو به سیستم عامل پس نمیده و نگه میداره که شاید بعدا بخواد دوباره تخصیص بده.</li>
+<li>دوم اینکه درخواست یک <a href="https://en.wikipedia.org/wiki/Paging#Linux">Memory Page</a> جدید توسط دستوراتی مثل <a href="http://man7.org/linux/man-pages/man2/mmap.2.html">mmap</a> و <a href="https://linux.die.net/man/2/sbrk">sbrk</a> درخواست یک بلاک بزرگ حافظه میکنه و اون رو بنا به درخواست نرم‌افزار تخصیص میده.</li>
+<li>بعدش هم اینکه برای اینکه یک <a href="https://en.wikipedia.org/wiki/Paging#Linux">Memory Page</a> رو برگردونه به سیستم عامل بایستی تمام حافظه‌هایی که روی اون تخصیص داده شدن برگشت داده بشه. که این هم همیشه اتفاق نمی‌افته.</li>
+<li>معمولا هم پیاده‌سازی‌ها اینجورین که حافظه‌ای که توسط <a href="https://linux.die.net/man/2/sbrk">sbrk</a> افزایش پیدا کرده رو دست نمیزنن(دلیل دقیقش رو نمیدونم) و حافظه‌ای که توسط <a href="http://man7.org/linux/man-pages/man2/mmap.2.html">mmap</a> اضافه شده رو به راحتی برمیگردونن.</li>
+</ul>
+</li>
+<li><p>تقریبا جواب سوال دوم رو هم تا الان دادم. مقدار <a href="http://www.tldp.org/LDP/sag/html/vm-intro.html">Virtual Memory</a> توسط <a href="https://en.wikipedia.org/wiki/GNU_C_Library">glibc</a> کنترل میشه و بوسیله <a href="https://linux.die.net/man/3/malloc">malloc</a> تخصیص داده میشه.</p></li>
+<li>جواب سوال سوم هم اینه که کرنل لینوکس همیشه حافظه برگشت داده شده رو برنمیگردونه چون که هزینه داره فقط اون رو علامت میزنه که در صورت نیاز اون رو حذف کنه یا به <a href="https://www.linux.com/news/all-about-linux-swap-space">swap</a> ببره.</li>
+</ul>
+
+
+<h2>راه حل مساله</h2>
+
+<p>حالا بریم سراغ مساله اصلی(چرا حافظه برگشت داده شده برگشت نخورده) و توجیهی که براش پیدا کردیم:
+* مهمترین دلیل این اتفاق به نظرم <a href="https://linux.die.net/man/3/malloc">malloc</a> هست که حافظه رو نگه داشته و برنگردونده
+* دومین دلیلش هم میتونه این باشه که کرنل هنوز <a href="https://en.wikipedia.org/wiki/Paging#Linux">Memory Page</a> رو برنداشته و فقط علامت زده</p>
+
+<p>حالا راه حل چیه:
+* اول اینکه به کرنل و <a href="https://en.wikipedia.org/wiki/GNU_C_Library">glibc</a> اعتماد کنیم
+* دوم اینکه بیایم و این پارامتر مروبط به <a href="https://linux.die.net/man/3/malloc">malloc</a> رو تنظیم کنیم<a href="http://www.gnu.org/software/libc/manual/html_node/Malloc-Tunable-Parameters.html#Malloc-Tunable-Parameters">4</a>
+* سوم اینکه بیایم از یه پیاده‌سازی دیگه برای تخصیص حافظه و آزاد سازی اون استفاده کنیم
+* چهارم اینکه بیایم خودمون مستقم از <a href="http://man7.org/linux/man-pages/man2/mmap.2.html">mmap</a> و <a href="http://man7.org/linux/man-pages/man2/mmap.2.html">munmap</a> استفاده کنیم</p>
+
+<p>امیدوارم اینا راه گشای دیگران هم باشه</p>
+
+<p>برای مطالعه بیشتر:</p>
+
+<p><a href="http://www.tldp.org/LDP/tlk/mm/memory.html">1</a></p>
+
+<p><a href="http://unix.stackexchange.com/questions/53447/does-free-unmap-the-memory-of-a-process">2</a></p>
+
+<p><a href="http://stackoverflow.com/questions/236001/unix-vs-windows-memory-deallocation">3</a></p>
+
+<p><a href="http://www.gnu.org/software/libc/manual/html_node/Malloc-Tunable-Parameters.html#Malloc-Tunable-Parameters">4</a></p>
+
+<p>همین!</p>

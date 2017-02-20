@@ -1,0 +1,61 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>خب من به مسائل مرتبط با کارایی و اجرای غیر همزمان کدها یا همون <a href="https://en.wikipedia.org/wiki/Asynchrony">async</a> رو دوست دارم. یکم هم تجربه کد نویسی رو باهاشون دارم. توی این پست میخوام بصورت ساده یکی از روشهای این پیاده‌سازی رو براتون توضیح بدم. خیلی دنبال این نیستم که بگم دقیقا این روش کجاها به درد میخوره و چرا به درد میخوره بلکه هدف یه معرفی اولیه است. انشالا در یه پست مفصل بیشتر توضیح میدم.</p>
+
+<p>کل موضوع حول دوتا واژه <a href="https://en.wikipedia.org/wiki/Futures_and_promises">promise</a> و <a href="https://en.wikipedia.org/wiki/Futures_and_promises">future</a> میگرده که در <a href="https://en.wikipedia.org/wiki/C%2B%2B11">c++0x11</a> معرفی شده. داستان از این قراره که در مدل <a href="https://en.wikipedia.org/wiki/Synchronization">sync</a> شما یه تابع رو صدا میزنی و منتظر میمونی که جواب به شما برگرده. اما در این مدل بعد از صدا زدن یک تابع بجای منتظر موندن برای جواب همون موقع یک مقدار از نوع <a href="https://en.wikipedia.org/wiki/Futures_and_promises">future</a> برمیگرده که تا زمانی که تابع صدا زده شده به اتمام نرسیده مقداری نداره. بعد از تموم شدن تابع مقدار <a href="https://en.wikipedia.org/wiki/Futures_and_promises">future</a> همون مقداری هست که نتیجه محاسباته. حالا اگه از منظر تابعی که صدا زده میشه نگاه کنیم اون تابع خروجیش از نوع <a href="https://en.wikipedia.org/wiki/Futures_and_promises">promise</a> هست که بعد از اتمام اون رو پر میکنه و برمیگردونه. همین!</p>
+
+<p>حالا این نمونه کد رو هم ببنید که یه مثال ساده از <a href="https://en.wikipedia.org/wiki/Futures_and_promises">future</a> و <a href="https://en.wikipedia.org/wiki/Futures_and_promises">promise</a> هست.</p>
+
+<p>مثالها از <a href="https://solarianprogrammer.com/2012/10/17/cpp-11-async-tutorial/">اینجا</a> گرفته شده. اولین مثال از این قرار که ما یه تابع که خروجیش void هست رو با استفاده <a href="https://en.wikipedia.org/wiki/Futures_and_promises">future</a> مورد استفاده قرار می‌دیم.</p>
+
+<pre><code class="c++">#include &lt;future&gt;
+#include &lt;iostream&gt;
+
+void called_from_async() {
+  std::cout &lt;&lt; "Async call" &lt;&lt; std::endl;
+}
+
+int main() {
+  //called_from_async launched in a separate thread if possible
+  std::future&lt;void&gt; result( std::async(called_from_async));
+
+  std::cout &lt;&lt; "Message from main." &lt;&lt; std::endl;
+
+  //ensure that called_from_async is launched synchronously
+  //if it wasn't already launched
+  result.get();
+
+  return 0;
+}
+</code></pre>
+
+<p>اتفاقی که اینجا میفته اینه که با استفاده از ‍<code>std::async</code> ما سعی میکنیم که اون تابع رو در یک <a href="https://en.wikipedia.org/wiki/Thread_(computing)">thread</a> دیگه اجرا کنیم و نتیجه رو بصورت یک <a href="https://en.wikipedia.org/wiki/Futures_and_promises">future</a> از اون بگیریم. با اجرای <code>result.get()</code> مطمئن می‌شیم که اجرای اون <a href="https://en.wikipedia.org/wiki/Thread_(computing)">thread</a> به اتمام رسیده.</p>
+
+<p>مثال دوم یه محاسبه بصورت غیر همزمان اجرا میشه و نتیجش به کمک <a href="https://en.wikipedia.org/wiki/Futures_and_promises">future</a> برگردونده میشه</p>
+
+<pre><code>#include &lt;future&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int twice(int m) {
+  return 2 * m;
+}
+
+int main() {
+  std::vector&lt;std::future&lt;int&gt;&gt; futures;
+
+  for(int i = 0; i &lt; 10; ++i) {
+    futures.push_back (std::async(twice, i));
+  }
+
+  //retrive and print the value stored in the future
+  for(auto &amp;e : futures) {
+    std::cout &lt;&lt; e.get() &lt;&lt; std::endl;
+  }
+
+  return 0;
+}
+</code></pre>
+
+<p>امیدوارم که این بدردتون خورده باشه.
+همین!</p>

@@ -1,0 +1,71 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>من این چند روز بخاطر یه کاری نیاز داشتم یه مساله تئوری گراف رو حل کنم. من معمولا سعی میکنم که توی کارها یه چیز جدید رو یاد بگیرم. به همین خاطر با استفاده از <a href="https://en.wikipedia.org/wiki/IPython#Project_Jupyter">ipython notebook</a> یا <a href="https://en.wikipedia.org/wiki/IPython#Project_Jupyter">jupyter notebook</a> مساله رو حل کردم. اتفاقا <a href="https://jadi.net">جادی</a> هم یه <a href="http://jadi.net/2015/08/jaditv-007-ipython-notebook-vcf/">ویدئوی آموزشی</a> خوب در موردش ساخته.</p>
+
+<h2>چرا Jupyter Notebook</h2>
+
+<p>خب اول از همه میخوام یه چیزایی رو توضیح بدم که به نظر من چرا شاید کسی بخواد از این سیستم‌ها استفاده کنه. مهم‌ترین استفاده‌ای که من براش داشتم اینه که هر جا که به نظرم میخواستم از <a href="https://en.wikipedia.org/wiki/MATLAB">matlab</a> استفاده کنم میتونستم از <a href="https://en.wikipedia.org/wiki/IPython#Project_Jupyter">jupyter notebook</a> استفاده کنم. بدین شکل که شما برای خیلی کارهای علمی یه کارهایی رو توی <a href="https://en.wikipedia.org/wiki/MATLAB">matlab</a> پیاده‌سازی میکنی و تست می‌کنی و وقتی لازم شد واقعا در محیط عملیاتی ازش استفاده کنی اون‌ها رو در محیط عملیاتی دوباره پیاده‌سازی می‌کنی.</p>
+
+<p>خب اولین زبانی که <a href="https://en.wikipedia.org/wiki/IPython#Project_Jupyter">jupyter notebook</a> پشتیبانی میکرده <a href="https://en.wikipedia.org/wiki/Python_(programming_language)">python</a> بوده که مثل زبان <a href="https://en.wikipedia.org/wiki/MATLAB">matlab</a> ساده بوده و بخاطر پکیج‌های عملی که هر دو زبان دارن پیاده‌سازی کارهای علمی به شدت ساده می‌شه.</p>
+
+<p>دوم اینکه هر دو از مفهوم به نام متغیرهای مشترک بین همه برنامه‌های مختلف پشتیبانی می‌کنن که باعث میشه شما یه کار پر هزینه رو یه بار انجام بدی و نتیجه رو داشته باشی و مراحل بعدی رو براساس اون و بدون نیاز به اجرای از اول اون بخش پر هزینه انجام بدی</p>
+
+<p>سوم اینکه هر دو ابزارهای بسیار خوب و قوی برای کشیدن نمودارهای علمی دارن که باعث میشه گزارش ساختن با اونها راحت باشه.</p>
+
+<p>چهارم اینکه در <a href="https://en.wikipedia.org/wiki/IPython#Project_Jupyter">jupyter notebook</a> شما می‌تونید همزمان که کد می‌نویسید گزارش هم بنویسید. یعنی بلوک‌هایی داریم که توش میشه با استفاده از <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a> متن هم بنویسید که در نهایت گزارش کاری که دارید انجام می‌دید هم آماده باشه. لازم نیست تکرار کنم که <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a> رو من خیلی دوست دارم(<a href="http://blog.abyz.ir/1394/03/markdown-my-doc-generation-format/">1</a> و <a href="http://blog.abyz.ir/1394/04/%d9%85%d8%b4%da%a9%d9%84-%d8%aa%d9%88%d9%84%db%8c%d8%af-%d9%85%d8%ad%d8%aa%d9%88%d8%a7-%d8%b1%d9%88%db%8c-%d9%85%d9%88%d8%a8%d8%a7%db%8c%d9%84-%d9%88-%d8%aa%d8%a8%d9%84%d8%aa/">2</a> و <a href="http://blog.abyz.ir/1393/10/markdown-latex-html/">3</a>)</p>
+
+<h2>یه مثال ساده</h2>
+
+<p>حالا کار من این بود که بتونم یه <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">گراف جهت‌دار بدون دور</a> بسازم و بتونم اون رو بکشم. خب اول از هم نحوه ساختن اون. کلا در ریاضی اثبات میشه که اگه بخواید <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">گراف جهت‌دار بدون دور</a> بسازید تنها چیزی که نیاز دارید اینه که توی ماتریس مجاورت اون گراف تنها درایه‌های زیر قطر اصلی ۱ باشن. این تضمین می‌کنه که گراف تولید شده <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">گراف جهت‌دار بدون دور</a> باشه.</p>
+
+<p>اول از همه باید نیازمندی ها رو وارد کرد</p>
+
+<pre><code>%matplotlib inline
+
+import numpy as np
+import random
+import networkx as nx
+import matplotlib.pyplot as plt
+from nxpd import draw
+from nxpd import nxpdParams
+import copy
+
+nxpdParams['show'] = 'ipynb'
+</code></pre>
+
+<p>بعد نوبت به کد ساختن DAG میرسه که کد این کار اینه</p>
+
+<pre><code>def generateDAG(nodeNo, edgeProb):
+    adj = np.zeros((nodeNo, nodeNo))
+    G=nx.DiGraph()
+    deps = dict()
+    nodeLables = list(range(nodeNo))
+    addedLabels = list()
+
+    for i in range(nodeNo):
+    lIdx = random.randrange(len(nodeLables))
+    lable = nodeLables[lIdx]
+    addedLabels.append(lable)
+    nodeLables.remove(lable)
+
+    G.add_node(str(addedLabels[i]))
+    deps[str(addedLabels[i])] = set()
+    for j in range(i):
+        rnd = random.random()
+        if  rnd &lt; edgeProb and i != j:
+            G.add_edge(str(addedLabels[j]), str(addedLabels[i]))
+            deps[str(addedLabels[i])].add(str(addedLabels[j]))
+            adj[i,j]= 1
+    return (adj, G, deps)
+</code></pre>
+
+<p>بعدش هم میشه نمایش دادنش که به سادگی میشه این</p>
+
+<pre><code>nodeCount = 10
+dependencyProbability= 0.7
+dag, G, deps = generateDAG(nodeCount,dependencyProbability)
+draw(G)
+</code></pre>
+
+<p>نتیجه کار هم توی <a href="https://github.com/yazdan/myNotebooks">github</a> قرار گرفته و از <a href="https://nbviewer.jupyter.org/github/yazdan/myNotebooks/blob/master/DagTutorial.ipynb">اینجا</a> قابل مشاهده است.
+همین!</p>

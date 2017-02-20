@@ -1,0 +1,41 @@
+اینم یه تجربه پراکنده دیگه!
+
+همونطور که احتمالا همه میدونید الان بازار containerها یا همون مجازی سازی سبک در دنیا و خب در ایران داغه. من توی یه سری پست سعی میکنم (<a href="http://blog.abyz.ir/1393/08/ligthweight-virtualization-part-1/">قسمت اول</a>) که راهی رو که خودم برای درک این موضوع طی کردم رو بنویسم.
+
+این دفعه در مورد اینکه آیا این نوع مجازی سازی جدیده یا قدیمی حرف میزنم و اینکه توی هر سیستم عامل این تکنولوژی چطور پیاده‌سازی شده. کل ایده این هست که سیستم عامل بتونه یه فضای ایزوله شده رو ایجاد کنه و در اون فضا یه سیستم عامل دیگه رو به اجرا در بیاره. اولین و قدیمی ترین تکنولوژی که در تمامی سیستم عامل‌های خانواده یونیکس که لینوکس هم عضوش هست ایجاد شده تکنولوژی <a title="Chroot" href="http://en.wikipedia.org/wiki/Chroot">chroot</a> هست که فضای دیسک رو از فضای دیسک اصلی ایزوله میکنه. اما بعدی این تکنولوژی‌ها تکمیل شده و منابع دیگه‌ی سیستم غیر از سیستم فایل هم ایزوله میشن. این ایزوله کردن اصالتا بر عهده کرنل هر سیستم عامل هست و کرنل هست که مسئولیت این ایزوله سازی رو برعهده داره پس با توجه به تفاوت‌های سیستم عامل ها تکنولوژی‌های متفاوتی بوجود اومده که عبارتند از
+<ul>
+ 	<li>لینوکس
+<ul>
+ 	<li><a title="Linux-VServer" href="http://en.wikipedia.org/wiki/Linux-VServer">Linux-VServer</a>: این تکنولوژی یکی از قدیمی ترین(سال ۲۰۰۱) تکنولوژی‌های مجازی سازی در سطح سیستم عامل هست که نیاز به تغییر کرنل(پچ شدن کردن) برای بوجود آوردن امکان ایزوله کردن منابع سیستم هست. این سیستم متن باز بوده ولی هیچوت تغییراتش به هسته سیستم عامل راه پیدا نکرده</li>
+ 	<li><a class="mw-redirect" title="Virtuozzo" href="http://en.wikipedia.org/wiki/Virtuozzo">Parallels Virtuozzo Containers</a> : این سیستم هم بسیار قدیمی است(سال ۲۰۰۱) و بصورت تجاری توسعه پیدا کرده.</li>
+ 	<li><a title="OpenVZ" href="http://en.wikipedia.org/wiki/OpenVZ">OpenVZ</a>: یک محصول متن بازه که اون هم نیاز به پچ کردن کرنل داره و تغییراتش هیچوت به درون هسته لینوکس راه پیدا نکرده. شروع توسعه این ابزار به سال ۲۰۰۵ برمیگرده.</li>
+ 	<li>ابزارهای مبتنی بر <a title="Cgroups" href="http://en.wikipedia.org/wiki/Cgroups">cgroups</a> و <a class="mw-redirect" title="Linux namespaces" href="http://en.wikipedia.org/wiki/Linux_namespaces">namespaces</a> در کرنل لینوکس: این تکنولوژی در سال ۲۰۰۶ توسط مهندسان گوگل شروع شده و به کرنل لینوکس راه پیدا کرده. با توجه به این ویژگی‌ها محصولات متفاوتی تولید شده
+<ul>
+ 	<li><a title="Lmctfy" href="http://en.wikipedia.org/wiki/Lmctfy">lmctfy</a>: این ابزار توسط گوگل توسعه پیدا کرده و مورد استفاده قرار گرفته. شروع توسعه این ابزار به سال ۲۰۱۳ برمیگرده.</li>
+ 	<li><a title="LXC" href="http://en.wikipedia.org/wiki/LXC">LXC</a>: این ابزار تا اونجایی که من میدونم از دل اوبانتو در اومده و تبدیل به یک ابزار قابل استفاده شده. اما به دلیل مستندات محدود خیلی مورد استفاده قرار نگرفته. شروع توسعه این ابزار به سال ۲۰۰۸ برمیگرده.</li>
+ 	<li><a title="Docker (software)" href="http://en.wikipedia.org/wiki/Docker_%28software%29">Docker</a>: سازندگان این ابزار ارائه دهنده سرویس <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">paas</a> بودند که از روند مشابهی برای مدیریت <a href="http://en.wikipedia.org/wiki/Platform_as_a_service">paas</a> خود استفاده می‌کردند و تجربیات خودشون رو در قالب این ابزار ارائه دادند. این ابزار به دلیل سادگی، مستندات خوب و معرفی راه‌حلهای کارا بسیار مقبولیت پیدا کرده. شروع توسعه این ابزار به سال ۲۰۱۳ برمیگرده.</li>
+ 	<li><a href="https://libvirt.org/drvlxc.html">libvir lxc</a>: این ابزار هم جزئی از کتابخانه <a href="http://en.wikipedia.org/wiki/Libvirt">libvirt</a> برای مدیریت تکنولوژی‌های مجازی سازی هست که ابزاری برای مجازی سازی سبک هم ارائه کرده.</li>
+</ul>
+</li>
+</ul>
+</li>
+ 	<li><a class="mw-redirect" title="FreeBSD Jail" href="http://en.wikipedia.org/wiki/FreeBSD_Jail">FreeBSD Jail</a>: در این سیستم عامل از سال ۱۹۹۸ کرنل از ویژگی‌ای به نام <a href="http://en.wikipedia.org/wiki/FreeBSD_Jail">jail</a> پشتیبانی میکنه که مجازی سازی سبک رو بوجود میاره. برخلاف لینوکس که چند  ویژگی مجزا کرنل برای مجازی سازی سبک استفاده میشه ویژگی <a href="http://en.wikipedia.org/wiki/FreeBSD_Jail">jail</a> در <a href="http://en.wikipedia.org/wiki/FreeBSD">freebsd</a> یک ویژگی یک پارچه برای مدیریت مجازی سازی سبک به حساب میاد ابزارهای سطح بالایی هم برای این مدیریت این ویژگی بوجود اومده که لیست کوتاه اونها در پایین اومده:
+<ul>
+ 	<li><a href="http://www.bsdstore.ru/en/about.html">cbsd</a></li>
+ 	<li><a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a></li>
+ 	<li><a href="http://wiki.pcbsd.org/index.php/Warden%C2%AE/9.2">warden</a></li>
+ 	<li><a href="https://github.com/pannon/iocage">iocage</a></li>
+ 	<li><a href="http://dreamcat4.github.io/finch/">finch</a></li>
+</ul>
+</li>
+ 	<li><a title="Solaris Containers" href="http://en.wikipedia.org/wiki/Solaris_Containers">Solaris Containers</a>: این تکنولوژی در هسته سولاریس از سال ۲۰۰۵ وجود داره و من اطلاع زیادی از اون ندارم</li>
+ 	<li><a title="Sysjail" href="http://en.wikipedia.org/wiki/Sysjail">sysjail</a>: این تکنولوژی در هسته netbsd و openbsd تا سال ۲۰۰۹ وجود داشته و من اطلاع زیادی از اون ندارم</li>
+ 	<li><a title="Workload Partitions" href="http://en.wikipedia.org/wiki/Workload_Partitions">WPARs</a>: یک سیستم خاص منظور برای سیستم عامل <a class="mw-redirect" title="AIX" href="http://en.wikipedia.org/wiki/AIX">AIX</a> هست(سال ۲۰۰۷) و من اطلاع زیادی از اون ندارم</li>
+ 	<li><a class="external text" href="http://www.hp.com/go/containers" rel="nofollow">HP-UX Containers (SRP)</a>: این تکنولوژی مختص <a class="mw-redirect" title="HPUX" href="http://en.wikipedia.org/wiki/HPUX">HPUX</a> هست(سال ۲۰۰۷) که من باز اطلاع خاصی ازش ندارم</li>
+ 	<li><a title="Sandboxie" href="http://en.wikipedia.org/wiki/Sandboxie">Sandboxie</a>: این یه تکنولوژی برای ویندوز هست و من دیدم دوستانی که روی بررسی ویروسها کار میکنن ازش استفاده میکنن.</li>
+</ul>
+همونطور که میبیند این سیستم و تکنولوژی‌های و ابزارهای مرتبط با اونها جدید نیستن اما اخیرا دوباره مورد استفاده قرار گرفتن.
+
+همین!
+
+&nbsp;

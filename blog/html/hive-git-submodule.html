@@ -1,0 +1,89 @@
+<p>یکی از ویژگی‌های <a href="https://en.wikipedia.org/wiki/Git_(software)">git</a> که به ما امکان ترکیب مخازن مختلف کد را می‌دهد امکان <a href="https://git-scm.com/docs/git-submodule">submodule</a> است. خیلی وقت‌ها اتفاق می‌افتد که بخشی از پروژه ما در پروژه‌های مختلف مشترک است، و ما در هر پروژه جدیدی که شروع می‌کنیم از آن کد استفاده می‌کنیم. مثلا اگر شما توسعه دهنده قالب برای وردپرس باشید، ممکن است فایلهای جاوا اسکریپت مربوط به اسلایدها صفحه اول در تمام قالب‌هایی که می‌سازید تکرار شوند. ممکن است شما به عنوان یک توسعه دهنده اندروید کلاس‌هایی را برای ارتباط با سرویس‌های اجتماعی توسعه داده باشید که در تمام نرم‌افزارهای شما مورد استفاده قرار گرفته است. ممکن است به عنوان  یک برنامه نویس دسکتاپ، کنترلهایی را برای کارهای خاص تولید کرده باشید که در تمامی پروژه‌ها از آن استفاده می‌کنید. در این حالت با استفاده از <a href="https://git-scm.com/docs/git-submodule">submodule</a>ها شما می‌توانید کل تاریخچه آن بخش مشترک در پروژه‌هایتان را به عنوان یک مخزن مستقل توسعه داده و از آن در پروژه‌های مختلف استفاده کنید. این کار علاوه تقویت ساختار منطقی پروژه‌هایتان روند رفع ایراد در پروژه‌های مختلف را آسانتر می‌کند.</p>
+
+<p>در واقع <a href="https://git-scm.com/docs/git-submodule">submodule</a> به شما این امکان را می‌دهد که به درون یک مخزن، یک یا چند مخزن دیگر اضافه کرده و از آنها در کنار هم استفاده کنید. در این نوشته بصورت خلاصه سعی می‌شود که نحوه کار با این ویژگی ارائه شود.</p>
+
+<h2>اضافه کردن یک <a href="https://git-scm.com/docs/git-submodule">submodule</a></h2>
+
+<p>اضافه کردن یک <a href="https://git-scm.com/docs/git-submodule">submodule</a> کار راحتی است. کافی است که به خط فرمان رفته و از دستور <code>git add submodule</code> استفاده کنید مثال این دستور به شکل زیر است:</p>
+
+<pre><code class="bash">$ git submodule add https://github.com/chaconinc/DbConnector
+Cloning into 'DbConnector'...
+remote: Counting objects: 11, done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 11 (delta 0), reused 11 (delta 0)
+Unpacking objects: 100% (11/11), done.
+Checking connectivity... done.
+</code></pre>
+
+<p>بعد از اجرای درست این دستور فایل جدید ‍‍‍<code>.gitmodules</code> به فایلها مخزن اصلی اضافه می‌شود. مهم است که این فایل را همانند <code>.gitignore</code> به مخزن اضافه کرده تا تاریخچه آن در دسترسی سایرین نیز قرار بگیرد.</p>
+
+<h2>کار با مخزنی که <a href="https://git-scm.com/docs/git-submodule">submodule</a> دارد</h2>
+
+<p>برای <a href="http://git-scm.com/docs/git-clone">clone</a> کردن یک مخزن که دارای یک یا چند <a href="https://git-scm.com/docs/git-submodule">submodule</a> است دو راه کلی وجود دارد. راه اول بدین شکل است که ابتدا مخزن اصلی <a href="http://git-scm.com/docs/git-clone">clone</a> شود و بعد از آن <a href="https://git-scm.com/docs/git-submodule">submodule</a>ها <a href="http://git-scm.com/docs/git-clone">clone</a> شود. در مدل دوم با یک دستور مخزن اصلی و تمامی <a href="https://git-scm.com/docs/git-submodule">submodule</a>ها یکجا <a href="http://git-scm.com/docs/git-clone">clone</a> می‌شود.</p>
+
+<p>در مدل اول ابتدا مخزن <a href="http://git-scm.com/docs/git-clone">clone</a> می‌شود:</p>
+
+<pre><code class="bash">$ git clone https://github.com/chaconinc/MainProject
+Cloning into 'MainProject'...
+remote: Counting objects: 14, done.
+remote: Compressing objects: 100% (13/13), done.
+remote: Total 14 (delta 1), reused 13 (delta 0)
+Unpacking objects: 100% (14/14), done.
+Checking connectivity... done.
+</code></pre>
+
+<p>برای <a href="http://git-scm.com/docs/git-clone">clone</a> کردن زیر مخزن‌ها به شکل زیر عمل می‌شود:</p>
+
+<pre><code class="bash">
+$ git submodule init
+Submodule 'DbConnector' (https://github.com/chaconinc/DbConnector) registered for path 'DbConnector'
+$ git submodule update
+Cloning into 'DbConnector'...
+remote: Counting objects: 11, done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 11 (delta 0), reused 11 (delta 0)
+Unpacking objects: 100% (11/11), done.
+Checking connectivity... done.
+Submodule path 'DbConnector': checked out 'c3f01dc8862123d317dd46284b05b6892c7b29bc'
+‍‍‍</code></pre>
+
+<p>در مدل دوم با استفاده از تنها یک دستور کل مخزن و زیرمخزن‌ها <a href="http://git-scm.com/docs/git-clone">clone</a> می‌شود:</p>
+
+<pre><code class="bash">
+$ git clone --recursive https://github.com/chaconinc/MainProject
+Cloning into 'MainProject'...
+remote: Counting objects: 14, done.
+remote: Compressing objects: 100% (13/13), done.
+remote: Total 14 (delta 1), reused 13 (delta 0)
+Unpacking objects: 100% (14/14), done.
+Checking connectivity... done.
+Submodule 'DbConnector' (https://github.com/chaconinc/DbConnector) registered for path 'DbConnector'
+Cloning into 'DbConnector'...
+remote: Counting objects: 11, done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 11 (delta 0), reused 11 (delta 0)
+Unpacking objects: 100% (11/11), done.
+Checking connectivity... done.
+Submodule path 'DbConnector': checked out 'c3f01dc8862123d317dd46284b05b6892c7b29bc'
+‍‍‍</code></pre>
+
+<h2>نکات قابل توجه هنگام استفاده از <a href="https://git-scm.com/docs/git-submodule">submodule</a>ها</h2>
+
+<p>همانطور که در مورد تمام ابزارهای تکنولوژیک صدق می‌کنید هریک از این ابزارها علاوه بر حل کردن مشکلاتی، ممکن است پیچیدگی‌هایی را ایجاد کنند. <a href="https://git-scm.com/docs/git-submodule">submodule</a>ها هم از این قاعده مستثنا نیستند. مهم‌ترین اتفاق این است که روند کاری پیچیده شده و شما برای هریک کارهای عادی که با مخزنتان انجام می‌دادید حال بایستی بیشتر فکر کنید. در این بخش از نوشته سعی می‌شود با قوانینی به شما برای تصمیم گیری این که چه کاری بایستی انجام شود کمک کند. قطعا این قوانین کامل نبود و عاری از اشکال نیست.</p>
+
+<ul>
+<li>اگر بخواهید <a href="https://git-scm.com/docs/git-branch">branch</a> یکی از <a href="https://git-scm.com/docs/git-submodule">submodule</a> را عوض کنید کافی است به آن شاخه رفته و با آن به شکل یک مخزن عادی رفتار کرده و <a href="https://git-scm.com/docs/git-branch">branch</a> را عوض کنید.</li>
+<li>برای گرفتن تغییرات <a href="https://git-scm.com/docs/git-submodule">submodule</a>ها کافی است از <code>git submodule update --remote</code> استفاده کنید همچنین این دستور سوئیچ‌های <code>--merge</code> و <code>--rebase</code> را پشتیبانی می‌کند.</li>
+<li>برای <a href="https://git-scm.com/docs/git-push">push</a> کردن تغییرات بایستی اول <a href="https://git-scm.com/docs/git-submodule">submodule</a>ها را <a href="https://git-scm.com/docs/git-commit">commit</a> کرده و آنها رو <a href="https://git-scm.com/docs/git-push">push</a> کنید و در انتها همین کار را برای مخزن اصلی انجام دهید</li>
+<li>میتوانید از دستور <code>git submodule foreach</code> برای اجرای یک دستور خاص روی تمام <a href="https://git-scm.com/docs/git-submodule">submodule</a>ها استفاده کنید.</li>
+<li>تغییر <a href="https://git-scm.com/docs/git-branch">branch</a> در مخزن اصلی معمولا باعث گیج شدن می‌شود که بایستی ابتدا <a href="https://git-scm.com/docs/git-submodule">submodule</a> را در <a href="https://git-scm.com/docs/git-branch">branch</a> اول ایجاد کرده و فایلها را در <a href="https://git-scm.com/docs/git-branch">branch</a> جدید اضافه کنید. برای رفع این مشکل می‌توانید در <a href="https://git-scm.com/docs/git-branch">branch</a> جدید از دستور <code>git submodule update --init</code> استفاده کنید.</li>
+<li>حذف <a href="https://git-scm.com/docs/git-submodule">submodule</a> با دستور ‍‍<code>git submodule rm</code> انجام می‌شود.</li>
+</ul>
+
+
+<h2>منابع و خواندن بیشتر</h2>
+
+<p>منابع این متن در زیر آمده است:</p>
+
+<p>-<a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules">فصل مرتبط</a> این موضوع در مستندات <a href="https://en.wikipedia.org/wiki/Git_(software)">git</a>
+- این <a href="https://chrisjean.com/git-submodules-adding-using-removing-and-updating/">پست وبلاگی</a> که به توضیح تجربه واقعی استفاده پرداخته.</p>

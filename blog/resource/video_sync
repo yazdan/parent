@@ -1,0 +1,1 @@
+ffmpeg -i DSC_1342_nosound.mkv -itsoffset 00:00:06.0 -i test_sync2.wav   -vcodec copy -acodec copy output.mkv

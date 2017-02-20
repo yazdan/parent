@@ -1,0 +1,18 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>همنطور که اخیرا <a href="http://blog.abyz.ir/1394/03/markdown-my-doc-generation-format/">زیاد</a>  <a href="http://blog.abyz.ir/1393/10/markdown-latex-html/">نوشتم</a> فرمت مورد علاقه تولید مستندات من <a href="http://daringfireball.net/projects/markdown/">markdown</a> شده و برای تبدیل کردنش به یه متن تر و تمیز pdf از <a href="http://pandoc.org/">pandoc</a> به همراه <a href="http://parsilatex.com/site/">xepersian</a> استفاده می‌کنم. حالا این وسط من یه مشکلی داشتم و اونم این بود که متون انگلیسی توی فارسی به درستی به فرمت <a href="http://parsilatex.com/site/">xepersian</a> تبدیل نمی‌شدند و هی مجبور بودم بصورت دستی متن <a href="https://en.wikipedia.org/wiki/LaTeX">latex</a> بدست آمده رو ویرایش کنم. به همین خاطر علاقه مند شدم که ببینم چطور می‌شه این مشکل رو توی <a href="http://pandoc.org/">pandoc</a> حل کرد. راه حل از این قراره که شما بایستی یه فیلتر برای <a href="http://pandoc.org/">pandoc</a> تعریف کنی و اون <a href="http://pandoc.org/">pandoc</a> filter اون کاری که ما دوست داریم رو برای ما انجام میده!</p>
+
+<h2>فیلترهای <a href="http://pandoc.org/">pandoc</a></h2>
+
+<p>زبان برنامه نویسی که <a href="http://pandoc.org/">pandoc</a> با اون توسعه یافته <a href="https://en.wikipedia.org/wiki/Haskell_(programming_language)">haskell</a> هست که خب به نظر من زبان عجیب غریبی هست. شما می‌تونید با استفاده از این زبان فیلترها رو توسعه بدید. کل ماجرای فیلترها هم از این قراره که ابتدا <a href="http://pandoc.org/">pandoc</a> متن ورودی رو میخونه و به ساختار سلسله مراتبی داخلی خودش تبدیل می‌کنه. حالا این ساختار رو بصورت اصلی (که فقط در زبان <a href="https://en.wikipedia.org/wiki/Haskell_(programming_language)">haskell</a> در دسترسه) یا بصورت json در اختیار فیلتر شما قرار می‌ده و فیلتر شما بر اساس فرمت نهایی، نوع المنت و متا دیتاهای مربوط به اون المنت تصمیم می‌گیره که چه کاری انجام بده. تقریبا هیچ مستندات درست حسابی من پیدا نکردم که همه چیز رو توضیح داده باشه، اما سعی کردم به کمک آزمایش و خطا و همچنین دیدن فیلترهای مشابهی که برای کارهای مختلف توسعه پیدا کرده بود گلیم خودم رو از آب بیرون بکشم.</p>
+
+<p>همچنین میشه این فیلترها رو به زبانی غیر از <a href="https://en.wikipedia.org/wiki/Haskell_(programming_language)">haskell</a> توسعه داد. این زبان‌های پایتون، جاوا اسکریپت(در محیط nodejs)، پرل و php هست. من به علت آشنایی بیشترم با پایتون از اون استفاده کردم</p>
+
+<h2>نحوه توسعه</h2>
+
+<p>کل روند از این قراره که شما فایل پایتون رو بصورت یک فیلتر با دسترسی اجرایی در اختیار <a href="http://pandoc.org/">pandoc</a> قرار میدید و اون تابع main رو صدا میزنه. پس از اون اطلاعات از stdin به برنامه داده شده و خروجی‌ها از stdout گرفته می‌شه. خود توسعه دهنده <a href="http://pandoc.org/">pandoc</a> هم پکیجی به نام <a href="https://github.com/jgm/pandocfilters">pandocfilters</a> توسعه داده که با استفاده از <a href="https://en.wikipedia.org/wiki/Pip_(package_manager)">pip</a> یا ابزارهای مشابه قابل نصب و استفاده است.</p>
+
+<p>تنها کاری که باید انجام بشه اینه که تابعی نوشته بشه و به عنوان آرگومان به تابع ‍‍<code>toJSONFilter</code> پاس داده بشه. این تابع بایستی چهارتا ورودی داشته باشه که به ترتیبت ‍‍<code>def behead(key, value, format, meta):</code> هستن و نوع، مقدار، فرمت خروجی و متادیتاهاست. همین من با استفاده از همین‌‌ها فیلترم رو توسعه دادم و گذاشتم روی <a href="https://github.com/yazdan/pandoc-xepersian">گیت‌هاب</a> که اگه دیگران هم خواستن ازش استفاده کنن.</p>
+
+<p>همین!
+پ.ن.: برای مطالعه بیشتر به <a href="http://pandoc.org/scripting.html">اینجا</a> مراجعه کنید.</p>

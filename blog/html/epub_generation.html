@@ -1,0 +1,20 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>همانطور که میدونید من اخیرا کتاب <a href="http://pretotyping.ir">پیش‌نمونه‌سازی</a> رو ترجمه کردم. کلی چیزهای مفید در راه این ترجمه یاد گرفتم. حالا به پیشنهاد <a href="http://jadi.net">جادی</a> سراغ این رفتم که نسخه <a href="https://en.wikipedia.org/wiki/EPUB">epub</a> این کتاب رو هم ایجاد کنم تا آدم‌های بیشتری بتونن راحت‌تر بخوننش و ازش استفاده کنن. همچنین باید بگم که <a href="http://jadi.net">جادی</a> زحمت کشیده توی <a href="http://jadi.net/2015/07/mondays-tir-2/">لینک‌های شاد دوشنبه آخر ماه</a> این کتاب رو معرفی کرده.</p>
+
+<p>کلا هم بخاطر وجود ابزار بسیار خوبی به اسم <a href="https://msdn.microsoft.com/en-us/library/ms930369.aspx">pandoc</a> و نوشته شدن متن به فرمت <a href="http://daringfireball.net/projects/markdown/">markdown</a> این عملیات تقریبا راحته!</p>
+
+<p>مراحل این کار بصورت خلاصه اینهاست:</p>
+
+<ol>
+<li>اول از همه نوشتن متادیتاهای کتاب توی یک فایل خاص به اسم title.txt به فرمت <a href="https://en.wikipedia.org/wiki/YAML">yaml</a>. این متا دیتا شامل اسم کتاب نام نویسنده و این دست اطلاعات است.</li>
+<li>تهیه کردن یک <a href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets">css</a> برای تعیین فونت متن. لازم میدونم که اضافه کنم که <a href="https://en.wikipedia.org/wiki/EPUB">epub</a> یه فرمت خاص از <a href="https://en.wikipedia.org/wiki/XHTML">xhtml</a> و <a href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets">css</a> یه سری متادیتای دیگه‌است که بصورت فشرده شده ارائه می شه. <a href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets">css</a> بوسیله این سوئیج epub-stylesheet به <a href="https://msdn.microsoft.com/en-us/library/ms930369.aspx">pandoc</a> معرفی می‌شه.</li>
+<li>اضافه کردن فونت‌ها درون فایل <a href="https://en.wikipedia.org/wiki/EPUB">epub</a> تا در صورتی که فایل روی خواننده مقصد وجود نداشته باشه از این فونت‌ها استفاده بشه. فرمت فونت‌هایی که بصورت رسمی پشتیبانی میشه oft و woff هست. اما استفاده از ttf و تقریبا سایر فرمت‌های فونت‌های وب هم پشتیبانی می‌شه. <a href="https://msdn.microsoft.com/en-us/library/ms930369.aspx">pandoc</a> این کار رو با سوئیچ epub-embed-font انجام میده.</li>
+<li>اضافه کردن نحوه ورق خوردن کتاب که از راست به چپ باشه. این کار با کلید page-progression-direction توی متادیتای کتاب در فایل title.txt انجام می‌شه.</li>
+<li>برای اینکه متن‌ها هم چپ به راست باشن بایستی به تگ ‍‍‍‍‍‍<code>&lt;html&gt;</code> هریک از بخشها یک ویژگی <code>dir="rtl"</code> اضافه بشه. اینکار بصورت مستقیم قابل انجام نبود و به همین خاطر با رجوع به میلینگ لیست <a href="https://msdn.microsoft.com/en-us/library/ms930369.aspx">pandoc</a> و پرسیدن در این مورد با استفاده از چیزی به اسم template این مشکل هم حل شد.</li>
+</ol>
+
+
+<p>نمونه انجام این کار توی <a href="https://github.com/yazdan/pretotypeit/tree/epub">شاخه epub</a> تو <a href="https://github.com/yazdan/pretotypeit">github</a> کتاب قابل روئیته.</p>
+
+<p>همین!</p>

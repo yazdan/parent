@@ -1,0 +1,38 @@
+<p>اینم یه تجربه پراکنده دیگه!</p>
+
+<p>همه ما با مفهوم <a href="https://en.wikipedia.org/wiki/QR_code">QR Code</a> کم و بیش آشنا هستیم. یک نوع بارکد دو بعدی هست که درون خودش اطلاعاتی رو مخفی می‌کنه. استانداردهای متفاوتی هم داره. نسخه‌های متفاوتی هم داره. همچنین افزونگی اطلاعات هم توش در نظر گرفته شده که میشه در صورت خراب شدن <a href="https://en.wikipedia.org/wiki/QR_code">QR Code</a> اون رو تا حدی پوشش داد.</p>
+
+<p>بعد از این مقدمه کوتاه باید بگم که توی یکی از کارهایی که من انجام میدادم نیاز داشتم که یک کتابخانه بیاد و برام متن‌هایی رو که از سمت سرور برای من ارسال میشه رو تبدیل به <a href="https://en.wikipedia.org/wiki/QR_code">QR Code</a> و اونها یا چاپ کنه یا نمایش بده! بعد از یه جستجوی ساده پیدا کردم که کتابخانه‌ای وجود داره به اسم <a href="https://fukuchi.org/works/qrencode/">libqrencode</a> که این کار رو انجام میده. تنها کافیه که کد رو کامپایل کنید و اون رو در کنار برنامتون قرار بدید. و تقریبا هر چیزی رو تبدیل به <a href="https://en.wikipedia.org/wiki/QR_code">QR Code</a> کنید!</p>
+
+<p>همچنین باید بگم که این کد رو میشه توی زبان‌های دیگه هم مورد استفاده قرار داد.</p>
+
+<h2>راه اندازی <a href="https://en.wikipedia.org/wiki/QR_code">QR Code</a> در فدورا و یک نمونه کد ساده</h2>
+
+<p>تنهای کاری که توی فدورا باید بکنید اینه که</p>
+
+<pre><code>dnf install qrencode qrencode-libs qrencode-devel
+</code></pre>
+
+<p>رو نصب کنید.
+نمونه کد استفاده از این کتابخانه هم ساده است:</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;qrencode.h&gt;
+
+int main()
+{
+    QRcode *result;
+    char text[] = "http://blog.abyz.ir/";
+
+    result = QRcode_encodeString(text, 0, QR_ECLEVEL_L, QR_MODE_AN, 1);
+
+    printf("%i \n", (result-&gt;width)^2);
+
+    QRcode_free(result);
+    return 0;
+}
+</code></pre>
+
+<p>همین!
+پ.ن: نتیجه کار هم در عکس این پست قابل مشاهده است.</p>
